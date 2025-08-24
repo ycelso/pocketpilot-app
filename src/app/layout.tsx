@@ -6,7 +6,7 @@ import { TransactionsProvider } from '@/contexts/transactions-context';
 import { BudgetsProvider } from '@/contexts/budgets-context';
 import { CurrencyProvider } from '@/contexts/currency-context';
 import { AccountsProvider } from '@/contexts/accounts-context';
-import { NotificationsProvider } from '@/contexts/notifications-context';
+// import { NotificationsProvider } from '@/contexts/notifications-context';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
@@ -67,10 +67,10 @@ export default function RootLayout({
               <TransactionsProvider>
                 <BudgetsProvider>
                   <AccountsProvider>
-                    <NotificationsProvider>
+                    {/* <NotificationsProvider> */}
                       {children}
                       <Toaster />
-                    </NotificationsProvider>
+                    {/* </NotificationsProvider> */}
                   </AccountsProvider>
                 </BudgetsProvider>
               </TransactionsProvider>

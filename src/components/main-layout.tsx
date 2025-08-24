@@ -6,7 +6,7 @@ import { Plus, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BottomNav from '@/components/bottom-nav';
 import AddTransactionDialog from '@/components/add-transaction-dialog';
-import { useNotificationTriggers } from '@/hooks/use-notification-triggers';
+// import { useNotificationTriggers } from '@/hooks/use-notification-triggers';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default function MainLayout({ children, openAddBudgetDialog }: MainLayout
   const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
   const [isTransactionDialogActuallyOpen, setIsTransactionDialogActuallyOpen] = useState(false);
   
-  useNotificationTriggers();
+  // useNotificationTriggers();
 
   const isBudgetPage = pathname === '/budgets';
   const hiddenFabRoutes = ['/login', '/register', '/profile'];
