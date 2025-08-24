@@ -23,23 +23,29 @@ export function useGoogleAuth() {
     try {
       console.log('🚀 Iniciando autenticación con Google (Supabase)...');
 
-      // Detectar si estamos en un WebView de Capacitor
-      const isCapacitor = typeof window !== 'undefined' && window.Capacitor;
+      // Mejorar la detección de Capacitor
+      const isCapacitor = typeof window !== 'undefined' && (
+        window.Capacitor || 
+        window.navigator.userAgent.includes('Capacitor') ||
+        window.navigator.userAgent.includes('PocketPilot')
+      );
+      
       console.log('📱 ¿Es Capacitor?', isCapacitor);
+      console.log('📱 User Agent:', window.navigator.userAgent);
 
-              // Configurar opciones de autenticación
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: isCapacitor 
-              ? 'https://pocketpilot-app.vercel.app/mobile-redirect' // Para Android WebView (usando Vercel)
-              : `${window.location.origin}/dashboard`, // Para navegador
-            queryParams: {
-              access_type: 'offline',
-              prompt: 'consent',
-            },
+      // Configurar opciones de autenticación
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: isCapacitor 
+            ? 'https://pocketpilot-app.vercel.app/mobile-redirect' // Para Android WebView (usando Vercel)
+            : `${window.location.origin}/dashboard`, // Para navegador
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
           },
-        });
+        },
+      });
 
       if (error) {
         console.error('❌ Error en autenticación Google:', error);

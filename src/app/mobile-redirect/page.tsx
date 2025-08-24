@@ -6,6 +6,9 @@ export default function MobileRedirectPage() {
   useEffect(() => {
     const handleMobileRedirect = () => {
       try {
+        console.log('🔍 Mobile redirect page iniciada');
+        console.log('🔍 URL completa:', window.location.href);
+        
         // Obtener los parámetros de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const hash = window.location.hash;
@@ -21,6 +24,7 @@ export default function MobileRedirectPage() {
           const hashParams = new URLSearchParams(hash.substring(1));
           accessToken = hashParams.get('access_token');
           refreshToken = hashParams.get('refresh_token');
+          console.log('🔍 Tokens encontrados en hash');
         }
         
         if (accessToken) {
@@ -31,39 +35,88 @@ export default function MobileRedirectPage() {
           
           console.log('🔗 Intentando abrir deep link:', deepLinkUrl);
           
-          // Intentar abrir la app con el deep link
-          window.location.href = deepLinkUrl;
+          // Intentar múltiples métodos para abrir la app
+          try {
+            // Método 1: window.location.href
+            window.location.href = deepLinkUrl;
+            
+            // Método 2: Intentar con window.open después de un delay
+            setTimeout(() => {
+              try {
+                window.open(deepLinkUrl, '_self');
+              } catch (e) {
+                console.log('❌ window.open falló:', e);
+              }
+            }, 1000);
+            
+            // Método 3: Intentar con location.replace después de otro delay
+            setTimeout(() => {
+              try {
+                window.location.replace(deepLinkUrl);
+              } catch (e) {
+                console.log('❌ location.replace falló:', e);
+              }
+            }, 2000);
+            
+          } catch (e) {
+            console.log('❌ Error al intentar abrir deep link:', e);
+          }
           
           // Fallback: mostrar mensaje al usuario
           setTimeout(() => {
             document.body.innerHTML = `
-              <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-                <h2>¡Autenticación exitosa!</h2>
-                <p>Si la app no se abrió automáticamente, toca el siguiente enlace:</p>
-                <a href="${deepLinkUrl}" style="display: inline-block; background: #0891b2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 10px;">
-                  Abrir PocketPilot
-                </a>
-                <p style="margin-top: 20px; color: #666; font-size: 14px;">
-                  También puedes cerrar esta pestaña y abrir la app manualmente.
-                </p>
+              <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+                <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;">
+                  <h2 style="color: #0891b2; margin-bottom: 20px;">¡Autenticación exitosa!</h2>
+                  <p style="margin-bottom: 20px; color: #666;">Si la app no se abrió automáticamente, toca el siguiente enlace:</p>
+                  <a href="${deepLinkUrl}" style="display: inline-block; background: #0891b2; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    🔗 Abrir PocketPilot
+                  </a>
+                  <p style="margin-top: 20px; color: #666; font-size: 14px;">
+                    También puedes cerrar esta pestaña y abrir la app manualmente.
+                  </p>
+                  <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: #666;">
+                    <strong>Debug info:</strong><br>
+                    Token encontrado: ${accessToken ? 'Sí' : 'No'}<br>
+                    User Agent: ${navigator.userAgent.substring(0, 50)}...
+                  </div>
+                </div>
               </div>
             `;
-          }, 2000);
+          }, 3000);
         } else {
           console.log('❌ No se encontró token en mobile redirect');
           document.body.innerHTML = `
-            <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-              <h2>Error de autenticación</h2>
-              <p>No se pudo completar la autenticación. Por favor, intenta nuevamente.</p>
+            <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+              <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;">
+                <h2 style="color: #ef4444; margin-bottom: 20px;">Error de autenticación</h2>
+                <p style="margin-bottom: 20px; color: #666;">No se pudo completar la autenticación. Por favor, intenta nuevamente.</p>
+                <a href="/login" style="display: inline-block; background: #0891b2; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                  Volver al Login
+                </a>
+                <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: #666;">
+                  <strong>Debug info:</strong><br>
+                  URL: ${window.location.href}<br>
+                  User Agent: ${navigator.userAgent.substring(0, 50)}...
+                </div>
+              </div>
             </div>
           `;
         }
       } catch (error) {
         console.error('❌ Error en mobile redirect:', error);
         document.body.innerHTML = `
-          <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-            <h2>Error</h2>
-            <p>Ocurrió un error durante la autenticación. Por favor, intenta nuevamente.</p>
+          <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+            <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;">
+              <h2 style="color: #ef4444; margin-bottom: 20px;">Error</h2>
+              <p style="margin-bottom: 20px; color: #666;">Ocurrió un error durante la autenticación. Por favor, intenta nuevamente.</p>
+              <a href="/login" style="display: inline-block; background: #0891b2; color: white; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                Volver al Login
+              </a>
+              <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: #666;">
+                <strong>Error:</strong> ${error.message}
+              </div>
+            </div>
           </div>
         `;
       }
@@ -81,21 +134,30 @@ export default function MobileRedirectPage() {
       height: '100vh',
       flexDirection: 'column',
       fontFamily: 'Arial, sans-serif',
-      textAlign: 'center'
+      textAlign: 'center',
+      background: '#f8f9fa'
     }}>
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{
-          width: '50px',
-          height: '50px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #0891b2',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto 20px'
-        }}></div>
+      <div style={{ 
+        background: 'white', 
+        padding: '30px', 
+        borderRadius: '10px', 
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        maxWidth: '300px'
+      }}>
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #0891b2',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 20px'
+          }}></div>
+        </div>
+        <h2 style={{ color: '#0891b2', marginBottom: '10px' }}>Completando autenticación...</h2>
+        <p style={{ color: '#666' }}>Te estamos redirigiendo a la app.</p>
       </div>
-      <h2>Completando autenticación...</h2>
-      <p>Te estamos redirigiendo a la app.</p>
       
       <style>{`
         @keyframes spin {
