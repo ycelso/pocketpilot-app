@@ -105,6 +105,7 @@ export default function MobileRedirectPage() {
         }
       } catch (error) {
         console.error('❌ Error en mobile redirect:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
         document.body.innerHTML = `
           <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
             <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;">
@@ -114,7 +115,7 @@ export default function MobileRedirectPage() {
                 Volver al Login
               </a>
               <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 12px; color: #666;">
-                <strong>Error:</strong> ${error.message}
+                <strong>Error:</strong> ${errorMessage}
               </div>
             </div>
           </div>
