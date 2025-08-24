@@ -16,6 +16,13 @@ const config = {
       backgroundColor: "#0891b2",
       showSpinner: true,
       spinnerColor: "#ffffff"
+    },
+    // Configuración para WebView interno
+    WebView: {
+      allowFileAccess: true,
+      allowContentAccess: true,
+      allowFileAccessFromFileURLs: true,
+      allowUniversalAccessFromFileURLs: true
     }
   }
 };

@@ -38,12 +38,14 @@ export function useGoogleAuth() {
         provider: 'google',
         options: {
           redirectTo: isCapacitor 
-            ? 'https://pocketpilot-app.vercel.app/mobile-redirect' // Para Android WebView (usando Vercel)
+            ? `${window.location.origin}/dashboard` // Para WebView interno
             : `${window.location.origin}/dashboard`, // Para navegador
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
+          // Configuración específica para WebView interno
+          skipBrowserRedirect: isCapacitor, // Evitar redirección al navegador externo
         },
       });
 
@@ -56,13 +58,21 @@ export function useGoogleAuth() {
         });
       } else {
         console.log('✅ Autenticación iniciada:', data);
-        toast({
-          title: 'Autenticación iniciada',
-          description: isCapacitor 
-            ? 'Completa el proceso en el navegador que se abrió'
-            : 'Completa el proceso en la ventana que se abrió',
-          variant: 'default',
-        });
+        
+        if (isCapacitor) {
+          // En Capacitor, la autenticación debería abrirse en el WebView interno
+          toast({
+            title: 'Autenticación iniciada',
+            description: 'Completa el proceso en la ventana que se abrió',
+            variant: 'default',
+          });
+        } else {
+          toast({
+            title: 'Autenticación iniciada',
+            description: 'Completa el proceso en la ventana que se abrió',
+            variant: 'default',
+          });
+        }
       }
     } catch (error: any) {
       console.error('❌ Error inesperado:', error);
