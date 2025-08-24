@@ -32,7 +32,7 @@ export function useGoogleAuth() {
           provider: 'google',
           options: {
             redirectTo: isCapacitor 
-              ? 'https://pocketpilot-ycels.loca.lt/mobile-redirect' // Para Android WebView (usando localtunnel)
+              ? 'https://pocketpilot-app.vercel.app/mobile-redirect' // Para Android WebView (usando Vercel)
               : `${window.location.origin}/dashboard`, // Para navegador
             queryParams: {
               access_type: 'offline',
